@@ -1,32 +1,33 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
-const CANVAS_SIDE = 400
+const TILE_SIDE = 400
+const BACKGROUND_COLOR = new THREE.Color('hsl(0, 0%, 10%)')
 
 const scene = new THREE.Scene()
-scene.background = new THREE.Color('hsl(0, 0%, 10%)')
+scene.background = BACKGROUND_COLOR
 
 // Setup the frustum for the perspective camera
 const fov: number = 100; // field of view: degrees in vertical
-const aspect: number = (CANVAS_SIDE) / CANVAS_SIDE; // width of canvas / height of canvar
+const aspect: number = (TILE_SIDE) / TILE_SIDE; // width of canvas / height of canvar
 const near: number = 0.1; // start of camera's range
 const far: number = 1000;  // end of camera's range
 
 const canvasPerspective1 = document.getElementById("canvasPerspective1") as HTMLCanvasElement
 const rendererPerspective1 = new THREE.WebGL1Renderer({canvas: canvasPerspective1})
-rendererPerspective1.setSize(CANVAS_SIDE , CANVAS_SIDE)
+rendererPerspective1.setSize(TILE_SIDE , TILE_SIDE)
 const cameraPerspective1 = new THREE.PerspectiveCamera(fov, aspect, near, far)
 cameraPerspective1.position.z = 2
 
 const canvasOrthographic1 = document.getElementById("canvasOrthographic1") as HTMLCanvasElement
 const rendererOrthographic1 = new THREE.WebGL1Renderer({canvas: canvasOrthographic1})
-rendererOrthographic1.setSize(CANVAS_SIDE , CANVAS_SIDE)
+rendererOrthographic1.setSize(TILE_SIDE , TILE_SIDE)
 const cameraOrthographic1 = new THREE.OrthographicCamera(-2,2,2,-2, near, far)
 cameraOrthographic1.position.z = 2
 
 const canvasPerspective2 = document.getElementById("canvasPerspective2") as HTMLCanvasElement
 const rendererPerspective2 = new THREE.WebGL1Renderer({canvas: canvasPerspective2})
-rendererPerspective2.setSize(CANVAS_SIDE , CANVAS_SIDE)
+rendererPerspective2.setSize(TILE_SIDE , TILE_SIDE)
 const cameraPerspective2 = new THREE.PerspectiveCamera(fov, aspect, near, far)
 cameraPerspective2.position.z = 0.5
 cameraPerspective2.position.y = 2
@@ -34,35 +35,80 @@ cameraPerspective2.lookAt(0, 0, 0)
 
 const canvasOrthographic2 = document.getElementById("canvasOrthographic2") as HTMLCanvasElement
 const rendererOrthographic2 = new THREE.WebGL1Renderer({canvas: canvasOrthographic2})
-rendererOrthographic2.setSize(CANVAS_SIDE , CANVAS_SIDE)
+rendererOrthographic2.setSize(TILE_SIDE , TILE_SIDE)
 const cameraOrthographic2 = new THREE.OrthographicCamera(-2,2,2,-2, near, far)
 cameraOrthographic2.position.z = 2
 cameraOrthographic2.position.x = -2
 cameraOrthographic2.lookAt(new THREE.Vector3())
 
-/* new OrbitControls(cameraPerspective1, rendererPerspective1.domElement) */
 
-const geometry = new THREE.TorusKnotGeometry()
-const material = new THREE.MeshBasicMaterial({
+const geometryTorusKnot = new THREE.TorusKnotGeometry()
+const materialTorusKnot = new THREE.MeshBasicMaterial({
     color: 'rgb(0, 200, 0)',
     wireframe: true,
 })
 
-const torusKnot = new THREE.Mesh(geometry, material)
+const torusKnot = new THREE.Mesh(geometryTorusKnot, materialTorusKnot)
 const SCALE = 0.6
 torusKnot.scale.x = SCALE
 torusKnot.scale.y = SCALE
 torusKnot.scale.z = SCALE
 scene.add(torusKnot)
 
+
+const TORUS_WIDTH = window.innerWidth - 850
+const TORUS_HEIGHT = window.innerHeight
+
+const torusScene = new THREE.Scene()
+torusScene.background = BACKGROUND_COLOR
+
+const cameraTorus = new THREE.PerspectiveCamera(fov, aspect, near, far)
+cameraTorus.position.z = 20
+const canvasTorus = document.getElementById("staticTorus") as HTMLCanvasElement
+
+const rendererTorus = new THREE.WebGL1Renderer({canvas: canvasTorus})
+rendererTorus.setSize(TORUS_WIDTH, TORUS_HEIGHT)
+
+const RADIUS_TORUS = 10
+const TUBE_TORUS = 3
+const RADIAL_SEGMENT = 16
+const TUBULAR_SEGMENT = 100
+
+
+const geometryTorus = new THREE.TorusGeometry(RADIUS_TORUS, TUBE_TORUS, RADIAL_SEGMENT, TUBULAR_SEGMENT)
+const materialTorus = new THREE.MeshBasicMaterial({
+    color: 'rgb(0, 0, 200)',
+    wireframe: true
+})
+const torus = new THREE.Mesh(geometryTorus, materialTorus)
+torusScene.add(torus)
+
+new OrbitControls(cameraTorus, rendererTorus.domElement)
+
 window.addEventListener('resize', onWindowResize, false)
 function onWindowResize() {
+    /* 
+    They have the default size: 400px 
     cameraPerspective1.aspect = aspect
     cameraPerspective1.updateProjectionMatrix()
-    rendererPerspective1.setSize(CANVAS_SIDE , CANVAS_SIDE)
+    rendererPerspective1.setSize(TILE_SIDE , TILE_SIDE)
+    
+    cameraPerspective2.aspect = aspect
+    cameraPerspective2.updateProjectionMatrix()
+    rendererPerspective2.setSize(TILE_SIDE , TILE_SIDE)
 
     cameraOrthographic1.updateProjectionMatrix()
-    rendererOrthographic1.setSize(CANVAS_SIDE , CANVAS_SIDE)
+    rendererOrthographic1.setSize(TILE_SIDE , TILE_SIDE)
+
+    cameraOrthographic2.updateProjectionMatrix()
+    rendererOrthographic2.setSize(TILE_SIDE , TILE_SIDE) 
+    */
+
+    // If an animate loop is running, there is no need to call the render() function on window resize
+
+    cameraTorus.aspect = aspect
+    cameraTorus.updateProjectionMatrix()
+    rendererTorus.setSize(window.innerWidth - 850, window.innerHeight)
 
     render()
 }
@@ -81,6 +127,7 @@ function render() {
     rendererOrthographic1.render(scene, cameraOrthographic1)
     rendererPerspective2.render(scene, cameraPerspective2)
     rendererOrthographic2.render(scene, cameraOrthographic2)
+    rendererTorus.render(torusScene, cameraTorus)
 }
 
 animate()
