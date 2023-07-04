@@ -1,0 +1,12 @@
+canvas {
+    display: inline;
+    margin: 0;
+    padding: 0;
+}
+
+#canvasContainer {
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+}
