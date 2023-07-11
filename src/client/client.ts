@@ -131,12 +131,31 @@ document.body.appendChild(stats.dom)
 
 
 // 6. GUI
+const axes: Array<keyof THREE.Vector3> = ["x", "y", "z"]
 const gui = new GUI()
 
+
 const torusFolder = gui.addFolder("Torus")
-torusFolder.add(torus.rotation, "x", 0, Math.PI * 2)
-torusFolder.add(torus.rotation, "y", 0, Math.PI * 2)
-torusFolder.add(torus.rotation, "z", 0, Math.PI * 2)
+
+const torusPositionFolder = torusFolder.addFolder("Position")
+const torusRotationFolder = torusFolder.addFolder("Rotation")
+const torusScaleFolder = torusFolder.addFolder("Scale")
+
+for (let axis of axes) {
+    
+    torusScaleFolder.add(torus.scale, axis, 0, 5)
+    torusPositionFolder.add(torus.position, axis, -10, 10)
+    
+    /* torusRotationFolder.add(torus.rotation, axis, 0, Math.PI * 2) */
+}
+
+
+
+torusRotationFolder.add(torus.rotation, "x", 0, Math.PI * 2)
+torusRotationFolder.add(torus.rotation, "y", 0, Math.PI * 2)
+torusRotationFolder.add(torus.rotation, "z", 0, Math.PI * 2)
+
+
 
 const cameraFolder = gui.addFolder("Camera")
 cameraFolder.add(cameraTorus.position, "z", 0, 50)
