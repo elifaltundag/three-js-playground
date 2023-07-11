@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import Stats from 'three/examples/jsm/libs/stats.module'
+import { GUI } from 'dat.gui'
 
 const TILE_SIDE = 400
 const BACKGROUND_COLOR = new THREE.Color('hsl(0, 0%, 10%)')
@@ -127,6 +128,19 @@ function onWindowResize() {
 // 5. STATS
 const stats = new Stats()
 document.body.appendChild(stats.dom)
+
+
+// 6. GUI
+const gui = new GUI()
+
+const torusFolder = gui.addFolder("Torus")
+torusFolder.add(torus.rotation, "x", 0, Math.PI * 2)
+torusFolder.add(torus.rotation, "y", 0, Math.PI * 2)
+torusFolder.add(torus.rotation, "z", 0, Math.PI * 2)
+
+const cameraFolder = gui.addFolder("Camera")
+cameraFolder.add(cameraTorus.position, "z", 0, 50)
+
 
 function animate() {
     requestAnimationFrame(animate)
