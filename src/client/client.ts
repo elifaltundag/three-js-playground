@@ -4,18 +4,24 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 const TILE_SIDE = 400
 const BACKGROUND_COLOR = new THREE.Color('hsl(0, 0%, 10%)')
 
+// 1. SCENE
 const scene = new THREE.Scene()
 scene.background = BACKGROUND_COLOR
 
-// Setup the frustum for the perspective camera
+
+// 2. RENDERER
+const canvasPerspective1 = document.getElementById("canvasPerspective1") as HTMLCanvasElement
+const rendererPerspective1 = new THREE.WebGL1Renderer({canvas: canvasPerspective1})
+rendererPerspective1.setSize(TILE_SIDE , TILE_SIDE)
+
+
+// 3. CAMERA
+// Setup the frustum constants for the perspective camera
 const fov: number = 100; // field of view: degrees in vertical
 const aspect: number = (TILE_SIDE) / TILE_SIDE; // width of canvas / height of canvar
 const near: number = 0.1; // start of camera's range
 const far: number = 1000;  // end of camera's range
 
-const canvasPerspective1 = document.getElementById("canvasPerspective1") as HTMLCanvasElement
-const rendererPerspective1 = new THREE.WebGL1Renderer({canvas: canvasPerspective1})
-rendererPerspective1.setSize(TILE_SIDE , TILE_SIDE)
 const cameraPerspective1 = new THREE.PerspectiveCamera(fov, aspect, near, far)
 cameraPerspective1.position.z = 2
 
@@ -42,6 +48,7 @@ cameraOrthographic2.position.x = -2
 cameraOrthographic2.lookAt(new THREE.Vector3())
 
 
+// 4. GEOMETRY, MATERIAL & MESH
 const geometryTorusKnot = new THREE.TorusKnotGeometry()
 const materialTorusKnot = new THREE.MeshBasicMaterial({
     color: 'rgb(0, 200, 0)',
@@ -104,13 +111,14 @@ function onWindowResize() {
     rendererOrthographic2.setSize(TILE_SIDE , TILE_SIDE) 
     */
 
-    // If an animate loop is running, there is no need to call the render() function on window resize
 
-    cameraTorus.aspect = aspect
-    cameraTorus.updateProjectionMatrix()
-    rendererTorus.setSize(window.innerWidth - 850, window.innerHeight)
-
-    render()
+   
+   cameraTorus.aspect = aspect
+   cameraTorus.updateProjectionMatrix()
+   rendererTorus.setSize(window.innerWidth - 850, window.innerHeight)
+   
+   // If an animate loop is running, there is no need to call the render() function on window resize
+   //render()
 }
 
 function animate() {
