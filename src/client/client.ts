@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import Stats from 'three/examples/jsm/libs/stats.module'
 
 const TILE_SIDE = 400
 const BACKGROUND_COLOR = new THREE.Color('hsl(0, 0%, 10%)')
@@ -36,6 +37,8 @@ const rendererPerspective2 = new THREE.WebGL1Renderer({canvas: canvasPerspective
 rendererPerspective2.setSize(TILE_SIDE , TILE_SIDE)
 const cameraPerspective2 = new THREE.PerspectiveCamera(fov, aspect, near, far)
 cameraPerspective2.position.z = 0.5
+
+// Move the camera up and look at the center 
 cameraPerspective2.position.y = 2
 cameraPerspective2.lookAt(0, 0, 0)
 
@@ -121,13 +124,25 @@ function onWindowResize() {
    //render()
 }
 
+// 5. STATS
+const stats = new Stats()
+document.body.appendChild(stats.dom)
+
 function animate() {
     requestAnimationFrame(animate)
 
+    /* 
     torusKnot.rotation.x += 0.01
-    torusKnot.rotation.y += 0.01
+    torusKnot.rotation.y += 0.01 
+    */
+
+    torus.rotation.x += 0.01
+    torus.rotation.y += 0.01
+
 
     render()
+
+    stats.update()
 }
 
 function render() {

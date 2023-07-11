@@ -16,6 +16,7 @@ canvas {
     margin: 0 auto;
     width: 800px;
     display: inline-flex;
+    display: none;
     justify-content: center;
     flex-wrap: wrap;
 }
